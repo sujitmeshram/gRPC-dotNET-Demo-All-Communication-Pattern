@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "gRPC.net.demo.stockDetails";
+package DemoStockPrice;
+
+service StockService {
+    rpc Authenticate (ClientCred) returns (AuthResponse);	
+    rpc GetStockListings (google.protobuf.Empty) returns (StockListing);
+	rpc GetStockPrice (Stock) returns (StockPrice);
+	rpc GetStockPriceStream (google.protobuf.Empty) returns (stream StockPrice);
+	rpc GetStocksPrices (stream Stock) returns (StocksPrices);
+	rpc GetCompanyStockPriceStream (stream Stock) returns (stream StockPrice);
+}
+
+message ClientCred
+{
+	string clientId = 1;
+	string clientSecret = 2;
+}
+
+message AuthResponse
+{
+	string bearerToken = 1;
+}
+
+message Stock
+{
+    string stockId = 1;
+	string stockName = 2;
+}
+
+message StockListing
+{
+    repeated Stock stocks = 1;
+}
+
+message StockPrice
+{
+    Stock stock = 1;
+	string price = 2;
+    google.protobuf.Timestamp dateTimeStamp = 3;
+}
+
+message StocksPrices
+{
+	repeated StockPrice stockPriceList = 1;
+}
